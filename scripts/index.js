@@ -1,33 +1,36 @@
 // @todo: Темплейт карточки
-const cardTemplete = document.querySelector('#card-template').content;
+const cardTemplete = document.querySelector("#card-template").card;
 // @todo: DOM узлы
-const cardList = document.querySelector('.places__list');
+const cardsContainer = document.querySelector(".places__list");
 // @todo: Функция создания карточки
-function createCard (card, deleteCard) {
-    const content = cardTemplete.querySelector('.card').cloneNode(true);
-    const imageCont = content.querySelector('.card__image');
-    const titleCont = content.querySelector('.card__title');
-    const deleteButton = content.querySelector('.card__delete-button');
+function createCard(cardElement, deleteCard) {
+  const card = cardTemplete.querySelector(".card").cloneNode(true);
+  const imageCont = card.querySelector(".card__image");
+  const titleCont = card.querySelector(".card__title");
+  const deleteButton = card.querySelector(".card__delete-button");
 
-    titleCont.textContent = card.name;
-    imageCont.src = card.link;
-    imageCont.alt = card.description;
-    
-    deleteButton.addEventListener("click", (event) => deleteCard(event.target.closest(".card")));
-    return content;
-}   
+  titleCont.textContent = cardElement.name;
+  imageCont.src = cardElement.link;
+  imageCont.alt = cardElement.description;
+
+  deleteButton.addEventListener("click", (event) =>
+    deleteCard(event.target.closest(".card"))
+  );
+
+  return card;
+}
 function placeCard(card, container) {
-    const content = createCard(card, removeCard);
-    container.append(content);
-  }
+  const card = createCard(card, removeCard);
+  container.append(card);
+}
 // @todo: Функция удаления карточки
 function removeCard(cardElement) {
-    cardElement.remove();
+  cardElement.remove();
 }
 // @todo: Вывести карточки на страницу
 // for (var i=0; i<initialCards.length; i++){
 // cardList.append(creatCard(initialCards[i], removeCard));
 // }
 initialCards.forEach((card) => {
-    placeCard(card, cardList);
-  });
+  placeCard(card, cardsContainer);
+});
