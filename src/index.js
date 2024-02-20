@@ -56,13 +56,13 @@ createNewCard.addEventListener('click', function(){
 });
 //изменение форм в модальных окнах
 // Находим форму в DOM
-const formElement = document.querySelector('.popup__form');// Воспользуйтесь методом querySelector()
-const formElement = document.querySelector('.popup__form');
+const formElement = popForm.querySelector('.popup__form');// Воспользуйтесь методом querySelector()
+const formEl = popupForm.querySelector('.popup__form');
 // Находим поля формы в DOM
 const nameInput = formElement.querySelector('.popup__input_type_name');// Воспользуйтесь инструментом .querySelector()
 const jobInput = formElement.querySelector('.popup__input_type_description');// Воспользуйтесь инструментом .querySelector()
-const nameCardInput = formElement.querySelector('.popup__input_type_card-name');// Воспользуйтесь инструментом .querySelector()
-const linkInput = formElement.querySelector('.popup__input_type_url');// Воспользуйтесь инструментом .querySelector()
+const nameCardInput = formEl.querySelector('.popup__input_type_card-name');// Воспользуйтесь инструментом .querySelector()
+const linkInput = formEl.querySelector('.popup__input_type_url');// Воспользуйтесь инструментом .querySelector()
 
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
@@ -84,9 +84,7 @@ function handleFormSubmit(evt) {
 }
 // форма для сохраниения карточек
 function handFormSubmit(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
-  // Получите значение полей jobInput и nameInput из свойства value
-  
+  evt.preventDefault(); 
    let nameCard = nameCardInput.value;
    let cardLink = linkInput.value;
    let cardItem = {
@@ -100,4 +98,4 @@ function handFormSubmit(evt) {
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 formElement.addEventListener('submit', handleFormSubmit);
-formElement.addEventListener('submit', handFormSubmit);
+formEl.addEventListener('submit', handFormSubmit);
