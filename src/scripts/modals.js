@@ -11,6 +11,7 @@
     }
   };
   export function openModal(popup) {
+    // popup.classList.add('popup_is-animated');
     popup.classList.add('popup_is-opened');
     popup.addEventListener('click', closeOverlay);
     document.addEventListener('keydown', closeEsc);
