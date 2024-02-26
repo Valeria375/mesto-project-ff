@@ -39,9 +39,9 @@ initialCards.forEach((card) => {
   placeCard(card, cardsContainer);
 });
 editProfileButton.addEventListener("click", function () {
-  nameInput.value;
-  jobInput.value;
   openModal(formEditProfile);
+  nameInput.value = profileTitle.textContent;  
+  jobInput.value = profileDesc.textContent;
 });
 closeEditProfileButton.addEventListener("click", function () {
   closeModal(formEditProfile);
