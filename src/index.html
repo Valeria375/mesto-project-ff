@@ -56,6 +56,7 @@
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
+            <span class="name-input-error popup__input_type_error"></span>
             <input
               type="text"
               id="description-input"
@@ -68,6 +69,9 @@
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
+            <span
+              class="description-input-error popup__input_type_error"
+            ></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -91,14 +95,16 @@
               data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
               required
             />
+            <span class="place-input-error popup__input_type_error"></span>
             <input
               type="url"
-              id="url-input"
+              id="place-url-input"
               name="link"
               class="popup__input popup__input_type_url"
               placeholder="Ссылка на картинку"
               required
             />
+            <span class="place-url-input-error popup__input_type_error"></span>
             <button type="submit" class="button popup__button">
               Сохранить
             </button>
@@ -120,8 +126,10 @@
         <button type="button" class="card__delete-button"></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <button type="button" class="card__like-button"></button>
-          <p class="count__likes"></p>
+          <div class="like-block">
+            <button type="button" class="card__like-button"></button>
+            <span class="count__likes"></span>
+          </div>
         </div>
       </li>
     </template>
