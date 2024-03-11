@@ -2,6 +2,19 @@ import "./pages/index.css";
 import { openModal, closeModal } from "./scripts/modals";
 import { initialCards } from "./scripts/cards";
 import { createCard, removeCard, likeCard } from "./scripts/card";
+import {
+  getInitialCards,
+  getUserMe,
+  updateAvatarId,
+  newCard,
+  newProfile,
+  getData,
+} from "./scripts/api";
+import {
+  validationSt,
+  enableValidation,
+  clearValidation,
+} from "./scripts/validation";
 // @todo: Темплейт карточки
 // @todo: DOM узлы
 const cardsContainer = document.querySelector(".places__list");
@@ -23,7 +36,7 @@ const linkInput = formCard.querySelector(".popup__input_type_url"); // Восп�
 const profileTitle = document.querySelector(".profile__title");
 const profileDesc = document.querySelector(".profile__description");
 const closeEditProfileButton = formEditProfile.querySelector(".popup__close");
-
+const closeAddNewCard = formAddCard.querySelector(".popup__close");
 function openImage(imageSrc, descriptionText) {
   popupImage.src = imageSrc;
   popupImage.alt = descriptionText;
@@ -38,17 +51,21 @@ function placeCard(card, container) {
 initialCards.forEach((card) => {
   placeCard(card, cardsContainer);
 });
-editProfileButton.addEventListener("click", function () {
+editProfileButton.addEventListener("click", () => {
+  clearValidation(formEditProfile, validationSt);
   openModal(formEditProfile);
-  nameInput.value = profileTitle.textContent;  
+  nameInput.value = profileTitle.textContent;
   jobInput.value = profileDesc.textContent;
 });
 closeEditProfileButton.addEventListener("click", function () {
   closeModal(formEditProfile);
 });
-createNewCard.addEventListener("click", function () {
-  nameCardInput.value = "";
-  linkInput.value = "";
+closeAddNewCard.addEventListener("click", function () {
+  closeModal(formAddCard);
+});
+createNewCard.addEventListener("click", () => {
+  formCard.reset();
+  clearValidation(formAddCard, validationSt);
   openModal(formAddCard);
 });
 popupTypeImageClose.addEventListener("click", function () {
@@ -93,3 +110,4 @@ function handleCardFormSubmit(evt) {
 // он будет следить за событием “submit” - «отправка»
 formProfile.addEventListener("submit", handleProfileFormSubmit);
 formCard.addEventListener("submit", handleCardFormSubmit);
+enableValidation(validationSt);
