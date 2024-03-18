@@ -49,7 +49,7 @@ export function createCard(cardElement, openImage) {
 export function likeCard(button) {
   button.classList.toggle("card__like-button_is-active");
 }
-function handleCloseModalByEsc(evt) {
+function closeModalByEsc(evt) {
   if (evt.key === "Escape") {
     const openedPopup = document.querySelector(".popup_is-opened");
     handleCloseModal(openedPopup);
@@ -57,11 +57,11 @@ function handleCloseModalByEsc(evt) {
 }
 export const handleCloseModal = (modalWindow) => {
   modalWindow.classList.remove("popup_is-opened");
-  document.removeEventListener("keydown", handleCloseModalByEsc);
+  document.removeEventListener("keydown", closeModalByEsc);
 };
 export const handleOpenModal = (modalWindow) => {
   modalWindow.classList.add("popup_is-opened");
-  document.addEventListener("keydown", handleCloseModalByEsc);
+  document.addEventListener("keydown", closeModalByEsc);
 };
 export const setPopupOpenEventListener = (openButton, popupNode, callBack) => {
   openButton.addEventListener("click", () => {

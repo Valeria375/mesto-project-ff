@@ -4,6 +4,7 @@ import {
   closeModal,
   openImageModal,
   handleAddCard,
+  handleEditAvatar,
 } from "./scripts/modals";
 import { initialCards } from "./scripts/cards";
 import { createCard, likeCard, removeCard, handleLike } from "./scripts/card";
@@ -43,34 +44,19 @@ const profileDesc = document.querySelector(".profile__description");
 const closeEditProfileButton = formEditProfile.querySelector(".popup__close");
 const closeAddNewCard = formAddCard.querySelector(".popup__close");
 //аватар
-const avatarButton = document.querySelector(".profile__image");
-const formEditAvatar = document.querySelector(".popup_type-avatar");
-const formAvatar = formEditAvatar.querySelector(".popup__form");
-function handleEditAvatar() {
-  const avatarInput = formAvatar.querySelector(".popup__input_type_url");
-  let userAvatar = "";
-  function handleFormSubmitAvatar(evt) {
-    renderCards(evt.submitter, "Сохранение...");
-    evt.preventDefault();
-    updateAvatarId({ avatar: avatarInput.value })
-      .then((data) => {
-        avatarButton.style = `background-image: url(${data.avatar})`;
-        userAvatar = data.avatar;
-        closeModal(avatarPopup);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => renderCards(evt.submitter, "Сохранить"));
-  }
-  formAvatar.addEventListener("submit", handleFormSubmitAvatar);
-}
+export const avatarButton = document.querySelector(".profile__image");
+export const formEditAvatar = document.querySelector(".popup_type-avatar");
+export const formAvatar = formEditAvatar.querySelector(".popup__form");
+const closeEditAvatar = formEditAvatar.querySelector(".popup__close");
+avatarButton.addEventListener("click", () => {
+  clearValidation(formEditAvatar, validationSt);
+  openModal(formEditAvatar);
+  // avatar.src = "";
+});
+closeEditAvatar.addEventListener("click", function () {
+  closeModal(formEditAvatar);
+})
 handleEditAvatar();
-// const fillProfileInfo = (userInfo) => {
-//   profileTitle.textContent = userInfo.name;
-//   profileDesc.textContent = userInfo.about;
-//   // profileImg.style.backgroundImage = `url(${userInfo.avatar})`;
-// };
 
 function openImage(imageSrc, descriptionText) {
   popupImage.src = imageSrc;
@@ -81,7 +67,7 @@ function openImage(imageSrc, descriptionText) {
 popupTypeImageClose.addEventListener("click", () => closeModal(popupTypeImage));
 function placeCard(card, container) {
   // const cardItem = createCard(card, likeCard, openImage);
-  // container.append(cardItem);
+  //  container.append(cardItem);
 }
 initialCards.forEach((card) => {
   placeCard(card, cardsContainer);
@@ -106,6 +92,7 @@ createNewCard.addEventListener("click", () => {
 popupTypeImageClose.addEventListener("click", function () {
   closeModal(formAddCard);
 });
+
 //изменение форм в модальных окнах
 // Находим форму в DOM
 
@@ -125,23 +112,7 @@ function handleProfileFormSubmit(evt) {
   newProfile(name, job);
   closeModal(formEditProfile);
 }
-function renderCards(element) {
-  const newCard = createCard(element, likeCard, openImage);
-  cardsContainer.prepend(newCard);
-}
-// форма для сохраниения карточек
-// function handleCardFormSubmit(evt) {
-//   evt.preventDefault();
-//   let nameCard = nameCardInput.value;
-//   let cardLink = linkInput.value;
-//   let cardItem = {
-//     name: nameCard,
-//     link: cardLink,
-//   };
-//   // Выберите элементы, куда должны быть вставлены значения полей
-//   renderCards(cardItem);
-//   closeModal(formAddCard);
-// }
+
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 formProfile.addEventListener("submit", handleProfileFormSubmit);

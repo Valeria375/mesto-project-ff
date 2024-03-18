@@ -1,6 +1,6 @@
 import { handleLike, removeCard, createCard } from "./card";
-import { userId, cardsContainer } from "../index";
-import { newCard } from "./api";
+import { userId, cardsContainer, avatarButton, formAvatar, formEditAvatar} from "../index";
+import { newCard, updateAvatarId } from "./api";
 
 function closeOverlay(evt) {
   if (evt.target === evt.currentTarget) {
@@ -14,7 +14,7 @@ function closeEsc(evt) {
   }
 }
 export function openModal(popup) {
-  // popup.classList.add('popup_is-animated');
+  popup.classList.add('popup_is-animated');
   popup.classList.add("popup_is-opened");
   popup.addEventListener("click", closeOverlay);
   document.addEventListener("keydown", closeEsc);
@@ -30,33 +30,18 @@ export const openImageModal = (item) => {
   imageModalCaption.textContent = item.name;
 };
 const popupNewCard = document.querySelector(".popup_type_new-card");
-// export function handleAddCard(createCard, deleteCard, placesList) {
-//   const newCardFormElement = popupNewCard.querySelector(".popup__form");
-//   const cardNameInput = newCardFormElement.querySelector(
-//     ".popup__input_type_card-name"
-//   );
-//   const cardUrlInput = newCardFormElement.querySelector(
-//     ".popup__input_type_url"
-//   );
-// const cardNameInput = newCardFormElement.querySelector(
-//   ".popup__input_type_card-name"
-// );
-// const cardUrlInput = newCardFormElement.querySelector(".popup__input_type_url");
-// function renderLoading(saveButton, status) {
-//   saveButton.textContent = status;
-// }
 function renderLoading(saveButton, status) {
   saveButton.textContent = status;
 }
 export function handleAddCard() {
-  const newCardFormElement = popupNewCard.querySelector(".popup__form");
-  const cardNameInput = newCardFormElement.querySelector(
+  const newCardElement = popupNewCard.querySelector(".popup__form");
+  const cardNameInput = newCardElement.querySelector(
     ".popup__input_type_card-name"
   );
-  const cardUrlInput = newCardFormElement.querySelector(
+  const cardUrlInput = newCardElement.querySelector(
     ".popup__input_type_url"
   );
-  function handleFormNewCardSubmit(evt) {
+  function formNewCardSubmit(evt) {
     renderLoading(evt.submitter, "Сохранение...");
     evt.preventDefault();
     const card = {
@@ -82,5 +67,24 @@ export function handleAddCard() {
       })
       .finally(() => renderLoading(evt.submitter, "Сохранить"));
   }
-  newCardFormElement.addEventListener("submit", handleFormNewCardSubmit);
+  newCardElement.addEventListener("submit", formNewCardSubmit);
+}
+export function handleEditAvatar() {
+  const avatarInput = formAvatar.querySelector(".popup__input_type_url");
+  let userAvatar = "";
+  function formSubmitAvatar(evt) {
+    renderLoading(evt.submitter, "Сохранение...");
+    evt.preventDefault();
+    updateAvatarId({ avatar: avatarInput.value })
+      .then((data) => {
+        avatarButton.style = `background-image: url(${data.avatar})`;
+        userAvatar = data.avatar;
+        closeModal(formEditAvatar);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => renderLoading(evt.submitter, "Сохранить"));
+  }
+  formAvatar.addEventListener("submit", formSubmitAvatar);
 }
