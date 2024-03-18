@@ -1,3 +1,7 @@
+import { handleLike, removeCard, createCard } from "./card";
+import { userId, cardsContainer } from "../index";
+import { newCard } from "./api";
+
 function closeOverlay(evt) {
   if (evt.target === evt.currentTarget) {
     closeModal(evt.target);
@@ -25,3 +29,58 @@ export const openImageModal = (item) => {
   imageModal.alt = item.name;
   imageModalCaption.textContent = item.name;
 };
+const popupNewCard = document.querySelector(".popup_type_new-card");
+// export function handleAddCard(createCard, deleteCard, placesList) {
+//   const newCardFormElement = popupNewCard.querySelector(".popup__form");
+//   const cardNameInput = newCardFormElement.querySelector(
+//     ".popup__input_type_card-name"
+//   );
+//   const cardUrlInput = newCardFormElement.querySelector(
+//     ".popup__input_type_url"
+//   );
+// const cardNameInput = newCardFormElement.querySelector(
+//   ".popup__input_type_card-name"
+// );
+// const cardUrlInput = newCardFormElement.querySelector(".popup__input_type_url");
+// function renderLoading(saveButton, status) {
+//   saveButton.textContent = status;
+// }
+function renderLoading(saveButton, status) {
+  saveButton.textContent = status;
+}
+export function handleAddCard() {
+  const newCardFormElement = popupNewCard.querySelector(".popup__form");
+  const cardNameInput = newCardFormElement.querySelector(
+    ".popup__input_type_card-name"
+  );
+  const cardUrlInput = newCardFormElement.querySelector(
+    ".popup__input_type_url"
+  );
+  function handleFormNewCardSubmit(evt) {
+    renderLoading(evt.submitter, "Сохранение...");
+    evt.preventDefault();
+    const card = {
+      name: cardNameInput.value,
+      link: cardUrlInput.value,
+    };
+    newCard(card)
+      .then((card) => {
+        const cardItem = createCard(card, {
+          removeCard,
+          handleLike,
+          openImageModal,
+          userId,
+        });
+        cardsContainer.prepend(cardItem);
+
+        closeModal(popupNewCard);
+        cardNameInput.value = "";
+        cardUrlInput.value = "";
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => renderLoading(evt.submitter, "Сохранить"));
+  }
+  newCardFormElement.addEventListener("submit", handleFormNewCardSubmit);
+}

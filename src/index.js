@@ -1,7 +1,12 @@
 import "./pages/index.css";
-import { openModal, closeModal, openImageModal } from "./scripts/modals";
+import {
+  openModal,
+  closeModal,
+  openImageModal,
+  handleAddCard,
+} from "./scripts/modals";
 import { initialCards } from "./scripts/cards";
-import { createCard, removeCard, likeCard, handleLike } from "./scripts/card";
+import { createCard, likeCard, removeCard, handleLike } from "./scripts/card";
 import {
   getInitialCards,
   getUserMe,
@@ -17,7 +22,7 @@ import {
 } from "./scripts/validation";
 // @todo: Темплейт карточки
 // @todo: DOM узлы
-const cardsContainer = document.querySelector(".places__list");
+export const cardsContainer = document.querySelector(".places__list");
 const popupTypeImage = document.querySelector(".popup_type_image");
 const popupTypeImageClose = popupTypeImage.querySelector(".popup__close");
 const popupImage = popupTypeImage.querySelector(".popup__image");
@@ -41,7 +46,7 @@ const closeAddNewCard = formAddCard.querySelector(".popup__close");
 const avatarButton = document.querySelector(".profile__image");
 const formEditAvatar = document.querySelector(".popup_type-avatar");
 const formAvatar = formEditAvatar.querySelector(".popup__form");
-function handleEditAvatar(){
+function handleEditAvatar() {
   const avatarInput = formAvatar.querySelector(".popup__input_type_url");
   let userAvatar = "";
   function handleFormSubmitAvatar(evt) {
@@ -125,22 +130,22 @@ function renderCards(element) {
   cardsContainer.prepend(newCard);
 }
 // форма для сохраниения карточек
-function handleCardFormSubmit(evt) {
-  evt.preventDefault();
-  let nameCard = nameCardInput.value;
-  let cardLink = linkInput.value;
-  let cardItem = {
-    name: nameCard,
-    link: cardLink,
-  };
-  // Выберите элементы, куда должны быть вставлены значения полей
-  renderCards(cardItem);
-  closeModal(formAddCard);
-}
+// function handleCardFormSubmit(evt) {
+//   evt.preventDefault();
+//   let nameCard = nameCardInput.value;
+//   let cardLink = linkInput.value;
+//   let cardItem = {
+//     name: nameCard,
+//     link: cardLink,
+//   };
+//   // Выберите элементы, куда должны быть вставлены значения полей
+//   renderCards(cardItem);
+//   closeModal(formAddCard);
+// }
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 formProfile.addEventListener("submit", handleProfileFormSubmit);
-formCard.addEventListener("submit", handleCardFormSubmit);
+// formCard.addEventListener("submit", handleCardFormSubmit);
 enableValidation(validationSt);
 export let userId = "";
 let userAvatar = "";
@@ -152,23 +157,11 @@ Promise.all([getInitialCards(), getUserMe()])
     profileDesc.textContent = userData.about;
     // profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
     initialCards.forEach((item) => {
-      const cardItem = createCard(item, handleLike, openImage);
+      const cardItem = createCard(item, likeCard, openImage);
       cardsContainer.append(cardItem);
     });
   })
   .catch((err) => {
     console.log(err);
   });
-// getData()
-//   .then((result) => {
-//     const userInfo = result[0];
-//     const initialCardsArr = result[1];
-//     fillProfileInfo(userInfo);
-//     renderCards(result);
-//     // console.log(result);
-//   })
-//   .catch((err) => {
-//     console.log(err);
-//   });
-
-// console.log(getInitialCards());
+handleAddCard(createCard, removeCard, cardsContainer);
