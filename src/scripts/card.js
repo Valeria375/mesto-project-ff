@@ -1,7 +1,7 @@
 import { deleteCardsId, addLikeId } from "./api";
 import { userId } from "..";
 
-export function createCard(cardElement, openImage, likeCard) {
+export function createCard(cardElement, openImage) {
   const cardTemplete = document.querySelector("#card-template").content;
   const card = cardTemplete.querySelector(".card").cloneNode(true);
   const imageCont = card.querySelector(".card__image");
@@ -15,7 +15,7 @@ export function createCard(cardElement, openImage, likeCard) {
   }
   deleteButton.addEventListener("click", removeCard);
   imageCont.addEventListener("click", function () {
-    openImage(imageCont.src, titleCont.alt);
+    openImage(imageCont.src, titleCont.textContent);
   });
 
   card.id = cardElement._id;
