@@ -1,8 +1,7 @@
 import { deleteCardsId, addLikeId } from "./api";
 import { userId } from "..";
-import { clearValidation, validationSt } from "./validation";
 
-export function createCard(cardElement, openImage) {
+export function createCard(cardElement, openImage, likeCard) {
   const cardTemplete = document.querySelector("#card-template").content;
   const card = cardTemplete.querySelector(".card").cloneNode(true);
   const imageCont = card.querySelector(".card__image");
@@ -10,26 +9,17 @@ export function createCard(cardElement, openImage) {
   const deleteButton = card.querySelector(".card__delete-button");
   titleCont.textContent = cardElement.name;
   imageCont.src = cardElement.link;
-  imageCont.alt = cardElement.description;
+  titleCont.alt = cardElement.description;
   if (cardElement.owner._id !== userId) {
     deleteButton.classList.add("card__delete-button-hidden");
   }
   deleteButton.addEventListener("click", removeCard);
-
-  // const likeButton = card.querySelector(".card__like-button");
-
-  // likeButton.addEventListener("click", function () {
-  //   likeCar(likeButton, card);
-  // });
   imageCont.addEventListener("click", function () {
-    openImage(cardElement.link, cardElement.name);
+    openImage(imageCont.src, titleCont.alt);
   });
 
   card.id = cardElement._id;
   // deleteCardsId(card.id);
-
- 
-
   const countLikes = cardElement.likes.length || 0;
   const countLikesN = card.querySelector(".count__likes");
   countLikesN.textContent = countLikes;
@@ -46,9 +36,9 @@ export function createCard(cardElement, openImage) {
   return card;
 }
 
-export function likeCard(button) {
-  button.classList.toggle("card__like-button_is-active");
-}
+// export function likeCard(button) {
+//   button.classList.toggle("card__like-button_is-active");
+// }
 function closeModalByEsc(evt) {
   if (evt.key === "Escape") {
     const openedPopup = document.querySelector(".popup_is-opened");
@@ -63,19 +53,7 @@ export const handleOpenModal = (modalWindow) => {
   modalWindow.classList.add("popup_is-opened");
   document.addEventListener("keydown", closeModalByEsc);
 };
-export const setPopupOpenEventListener = (openButton, popupNode, callBack) => {
-  openButton.addEventListener("click", () => {
-    handleOpenModal(popupNode);
-    clearValidation(formEdit, validationSt);
-    clearValidation(popupNewCard, validationSt);
-    clearValidation(avatarPopup, validationSt);
-    if (callBack) {
-      callBack();
-    }
-  });
-};
 
-// Функция удаления карточки, передаваемая в createCard как аргумент
 export function removeCard(event) {
   const deletedCard = event.target.closest(".card");
   // console.log(deletedCard.id);
@@ -83,7 +61,6 @@ export function removeCard(event) {
     .then(deletedCard.remove())
     .catch((err) => console.error(`Ошибка удаления карточки: ${err}`));
 }
-
 export function handleLike(likeButton, cardElem) {
   const myLikeCard = likeButton.classList.contains(
     "card__like-button_is-active"

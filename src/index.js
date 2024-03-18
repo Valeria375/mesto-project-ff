@@ -65,13 +65,13 @@ function openImage(imageSrc, descriptionText) {
   openModal(popupTypeImage);
 }
 popupTypeImageClose.addEventListener("click", () => closeModal(popupTypeImage));
-function placeCard(card, container) {
-  // const cardItem = createCard(card, likeCard, openImage);
-  //  container.append(cardItem);
-}
-initialCards.forEach((card) => {
-  placeCard(card, cardsContainer);
-});
+// function placeCard(card, container) {
+//   // const cardItem = createCard(card, likeCard, openImage);
+//   //  container.append(cardItem);
+// }
+// initialCards.forEach((card) => {
+//   placeCard(card, cardsContainer);
+// });
 editProfileButton.addEventListener("click", () => {
   clearValidation(formEditProfile, validationSt);
   openModal(formEditProfile);
@@ -112,7 +112,6 @@ function handleProfileFormSubmit(evt) {
   newProfile(name, job);
   closeModal(formEditProfile);
 }
-
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 formProfile.addEventListener("submit", handleProfileFormSubmit);
@@ -126,9 +125,9 @@ Promise.all([getInitialCards(), getUserMe()])
     userId = userData._id;
     profileTitle.textContent = userData.name;
     profileDesc.textContent = userData.about;
-    // profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+    avatarButton.style.backgroundImage = `url(${userData.avatar})`;
     initialCards.forEach((item) => {
-      const cardItem = createCard(item, likeCard, openImage);
+      const cardItem = createCard(item, openImage);
       cardsContainer.append(cardItem);
     });
   })

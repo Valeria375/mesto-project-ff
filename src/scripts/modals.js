@@ -1,5 +1,11 @@
 import { handleLike, removeCard, createCard } from "./card";
-import { userId, cardsContainer, avatarButton, formAvatar, formEditAvatar} from "../index";
+import {
+  userId,
+  cardsContainer,
+  avatarButton,
+  formAvatar,
+  formEditAvatar,
+} from "../index";
 import { newCard, updateAvatarId } from "./api";
 
 function closeOverlay(evt) {
@@ -14,7 +20,7 @@ function closeEsc(evt) {
   }
 }
 export function openModal(popup) {
-  popup.classList.add('popup_is-animated');
+  popup.classList.add("popup_is-animated");
   popup.classList.add("popup_is-opened");
   popup.addEventListener("click", closeOverlay);
   document.addEventListener("keydown", closeEsc);
@@ -24,10 +30,11 @@ export function closeModal(popup) {
   popup.removeEventListener("click", closeOverlay);
   document.removeEventListener("keydown", closeEsc);
 }
+const infoImage = document.querySelector(".popup__image");
 export const openImageModal = (item) => {
-  imageModal.src = item.link;
-  imageModal.alt = item.name;
-  imageModalCaption.textContent = item.name;
+  infoImage.textContent = item.name;
+  infoImage.src = item.link;
+  infoImage.alt = item.description;
 };
 const popupNewCard = document.querySelector(".popup_type_new-card");
 function renderLoading(saveButton, status) {
@@ -38,9 +45,7 @@ export function handleAddCard() {
   const cardNameInput = newCardElement.querySelector(
     ".popup__input_type_card-name"
   );
-  const cardUrlInput = newCardElement.querySelector(
-    ".popup__input_type_url"
-  );
+  const cardUrlInput = newCardElement.querySelector(".popup__input_type_url");
   function formNewCardSubmit(evt) {
     renderLoading(evt.submitter, "Сохранение...");
     evt.preventDefault();
