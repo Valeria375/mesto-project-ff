@@ -20,3 +20,8 @@ export function closeModal(popup) {
   popup.removeEventListener("click", closeOverlay);
   document.removeEventListener("keydown", closeEsc);
 }
+export const openImageModal = (item) => {
+  imageModal.src = item.link;
+  imageModal.alt = item.name;
+  imageModalCaption.textContent = item.name;
+};

@@ -1,7 +1,7 @@
 import "./pages/index.css";
-import { openModal, closeModal } from "./scripts/modals";
+import { openModal, closeModal, openImageModal } from "./scripts/modals";
 import { initialCards } from "./scripts/cards";
-import { createCard, removeCard, likeCard } from "./scripts/card";
+import { createCard, removeCard, likeCard, handleLike } from "./scripts/card";
 import {
   getInitialCards,
   getUserMe,
@@ -37,6 +37,36 @@ const profileTitle = document.querySelector(".profile__title");
 const profileDesc = document.querySelector(".profile__description");
 const closeEditProfileButton = formEditProfile.querySelector(".popup__close");
 const closeAddNewCard = formAddCard.querySelector(".popup__close");
+//аватар
+const avatarButton = document.querySelector(".profile__image");
+const formEditAvatar = document.querySelector(".popup_type-avatar");
+const formAvatar = formEditAvatar.querySelector(".popup__form");
+function handleEditAvatar(){
+  const avatarInput = formAvatar.querySelector(".popup__input_type_url");
+  let userAvatar = "";
+  function handleFormSubmitAvatar(evt) {
+    renderCards(evt.submitter, "Сохранение...");
+    evt.preventDefault();
+    updateAvatarId({ avatar: avatarInput.value })
+      .then((data) => {
+        avatarButton.style = `background-image: url(${data.avatar})`;
+        userAvatar = data.avatar;
+        closeModal(avatarPopup);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => renderCards(evt.submitter, "Сохранить"));
+  }
+  formAvatar.addEventListener("submit", handleFormSubmitAvatar);
+}
+handleEditAvatar();
+// const fillProfileInfo = (userInfo) => {
+//   profileTitle.textContent = userInfo.name;
+//   profileDesc.textContent = userInfo.about;
+//   // profileImg.style.backgroundImage = `url(${userInfo.avatar})`;
+// };
+
 function openImage(imageSrc, descriptionText) {
   popupImage.src = imageSrc;
   popupImage.alt = descriptionText;
@@ -45,8 +75,8 @@ function openImage(imageSrc, descriptionText) {
 }
 popupTypeImageClose.addEventListener("click", () => closeModal(popupTypeImage));
 function placeCard(card, container) {
-  const cardItem = createCard(card, removeCard, likeCard, openImage);
-  container.append(cardItem);
+  // const cardItem = createCard(card, likeCard, openImage);
+  // container.append(cardItem);
 }
 initialCards.forEach((card) => {
   placeCard(card, cardsContainer);
@@ -87,10 +117,11 @@ function handleProfileFormSubmit(evt) {
   // Вставьте новые значения с помощью textContent
   profileTitle.textContent = name;
   profileDesc.textContent = job;
+  newProfile(name, job);
   closeModal(formEditProfile);
 }
 function renderCards(element) {
-  const newCard = createCard(element, removeCard, likeCard, openImage);
+  const newCard = createCard(element, likeCard, openImage);
   cardsContainer.prepend(newCard);
 }
 // форма для сохраниения карточек
@@ -111,3 +142,33 @@ function handleCardFormSubmit(evt) {
 formProfile.addEventListener("submit", handleProfileFormSubmit);
 formCard.addEventListener("submit", handleCardFormSubmit);
 enableValidation(validationSt);
+export let userId = "";
+let userAvatar = "";
+Promise.all([getInitialCards(), getUserMe()])
+  .then(([initialCards, userData]) => {
+    userAvatar = userData.avatar;
+    userId = userData._id;
+    profileTitle.textContent = userData.name;
+    profileDesc.textContent = userData.about;
+    // profileAvatar.style.backgroundImage = `url(${userData.avatar})`;
+    initialCards.forEach((item) => {
+      const cardItem = createCard(item, handleLike, openImage);
+      cardsContainer.append(cardItem);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+// getData()
+//   .then((result) => {
+//     const userInfo = result[0];
+//     const initialCardsArr = result[1];
+//     fillProfileInfo(userInfo);
+//     renderCards(result);
+//     // console.log(result);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+
+// console.log(getInitialCards());
