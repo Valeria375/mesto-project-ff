@@ -1,5 +1,5 @@
 import "./pages/index.css";
-import { openModal, closeModal } from "./scripts/modals";
+import { openModal, closeModal, openImage } from "./scripts/modals";
 // import { initialCards } from "./scripts/cards";
 import { createCard, likeCard, removeCard, handleLike } from "./scripts/card";
 import {
@@ -18,10 +18,10 @@ import {
 // @todo: Темплейт карточки
 // @todo: DOM узлы
 export const cardsContainer = document.querySelector(".places__list");
- const popupTypeImage = document.querySelector(".popup_type_image");
+export const popupTypeImage = document.querySelector(".popup_type_image");
 const popupTypeImageClose = popupTypeImage.querySelector(".popup__close");
- const popupImage = popupTypeImage.querySelector(".popup__image");
-const popupCaption = popupTypeImage.querySelector(".popup__caption");
+export const popupImage = popupTypeImage.querySelector(".popup__image");
+export const popupCaption = popupTypeImage.querySelector(".popup__caption");
 const editProfileButton = document.querySelector(".profile__edit-button");
 const formEditProfile = document.querySelector(".popup_type_edit");
 const createNewCard = document.querySelector(".profile__add-button");
@@ -52,12 +52,12 @@ closeEditAvatar.addEventListener("click", function () {
 });
 handleEditAvatar();
 
-function openImage(imageSrc, descriptionText) {
-  popupImage.src = imageSrc;
-  popupImage.alt = descriptionText;
-  popupCaption.textContent = descriptionText;
-  openModal(popupTypeImage);
-}
+// function openImage(imageSrc, descriptionText) {
+//   popupImage.src = imageSrc;
+//   popupImage.alt = descriptionText;
+//   popupCaption.textContent = descriptionText;
+//   openModal(popupTypeImage);
+// }
 popupTypeImageClose.addEventListener("click", () => closeModal(popupTypeImage));
 // function placeCard(card, container) {
 //   // const cardItem = createCard(card, likeCard, openImage);

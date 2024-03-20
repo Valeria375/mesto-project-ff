@@ -1,5 +1,5 @@
 import { handleLike, removeCard, createCard } from "./card";
-import { popupTypeImage, popupImage } from "../index";
+import { popupTypeImage, popupImage, popupCaption } from "../index";
 import { newCard, updateAvatarId } from "./api";
 
 function closeOverlay(evt) {
@@ -24,10 +24,9 @@ export function closeModal(popup) {
   popup.removeEventListener("click", closeOverlay);
   document.removeEventListener("keydown", closeEsc);
 }
-
-// export function openImage(imageSrc, descriptionText) {
-//   popupImage.src = imageSrc;
-//   popupImage.alt = descriptionText;
-//   popupCaption.textContent = descriptionText;
-//   openModal(popupTypeImage);
-// }
+export function openImage(imageSrc, descriptionText) {
+  popupImage.src = imageSrc;
+  popupImage.alt = descriptionText;
+  popupCaption.textContent = descriptionText;
+  openModal(popupTypeImage);
+}
