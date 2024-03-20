@@ -37,11 +37,11 @@ export function createCard(cardElement, openImage, userId) {
 //   button.classList.toggle("card__like-button_is-active");
 // }
 
-export function removeCard(event) {
-  const deletedCard = event.target.closest(".card");
+export function removeCard(event,deletedCardid) {
+  // const deletedCard = event.target.closest(".card");
   // console.log(deletedCard.id);
-  deleteCardsId(deletedCard.id)
-    .then(deletedCard.remove())
+  deleteCardsId(deletedCardid)
+    .then(event.target.closest(".card").remove())
     .catch((err) => console.error(`Ошибка удаления карточки: ${err}`));
 }
 export function handleLike(likeButton, cardElem) {
