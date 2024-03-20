@@ -1,6 +1,4 @@
-import { handleLike, removeCard, createCard } from "./card";
 import { popupTypeImage, popupImage, popupCaption } from "../index";
-import { newCard, updateAvatarId } from "./api";
 
 function closeOverlay(evt) {
   if (evt.target === evt.currentTarget) {
@@ -14,7 +12,7 @@ function closeEsc(evt) {
   }
 }
 export function openModal(popup) {
-  popup.classList.add("popup_is-animated");
+  // popup.classList.add("popup_is-animated");
   popup.classList.add("popup_is-opened");
   popup.addEventListener("click", closeOverlay);
   document.addEventListener("keydown", closeEsc);
@@ -30,3 +28,17 @@ export function openImage(imageSrc, descriptionText) {
   popupCaption.textContent = descriptionText;
   openModal(popupTypeImage);
 }
+// function closeModalByEsc(evt) {
+//   if (evt.key === "Escape") {
+//     const openedPopup = document.querySelector(".popup_is-opened");
+//     handleCloseModal(openedPopup);
+//   }
+// }
+// export const handleCloseModal = (modalWindow) => {
+//   modalWindow.classList.remove("popup_is-opened");
+//   document.removeEventListener("keydown", closeModalByEsc);
+// };
+// export const handleOpenModal = (modalWindow) => {
+//   modalWindow.classList.add("popup_is-opened");
+//   document.addEventListener("keydown", closeModalByEsc);
+// };

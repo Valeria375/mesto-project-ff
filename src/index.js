@@ -10,11 +10,15 @@ import {
   newProfile,
   getData,
 } from "./scripts/api";
-import {
-  validationSt,
-  enableValidation,
-  clearValidation,
-} from "./scripts/validation";
+import { enableValidation, clearValidation } from "./scripts/validation";
+const validationSt = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 // @todo: Темплейт карточки
 // @todo: DOM узлы
 export const cardsContainer = document.querySelector(".places__list");
@@ -42,7 +46,9 @@ export const avatarButton = document.querySelector(".profile__image");
 export const formEditAvatar = document.querySelector(".popup_type-avatar");
 export const formAvatar = formEditAvatar.querySelector(".popup__form");
 const closeEditAvatar = formEditAvatar.querySelector(".popup__close");
+const linkAvatar = formEditAvatar.querySelector(".popup__input_type_url");
 avatarButton.addEventListener("click", () => {
+  linkAvatar.value = "";
   clearValidation(formEditAvatar, validationSt);
   openModal(formEditAvatar);
   // avatar.src = "";
@@ -52,12 +58,6 @@ closeEditAvatar.addEventListener("click", function () {
 });
 handleEditAvatar();
 
-// function openImage(imageSrc, descriptionText) {
-//   popupImage.src = imageSrc;
-//   popupImage.alt = descriptionText;
-//   popupCaption.textContent = descriptionText;
-//   openModal(popupTypeImage);
-// }
 popupTypeImageClose.addEventListener("click", () => closeModal(popupTypeImage));
 // function placeCard(card, container) {
 //   // const cardItem = createCard(card, likeCard, openImage);
@@ -67,6 +67,8 @@ popupTypeImageClose.addEventListener("click", () => closeModal(popupTypeImage));
 //   placeCard(card, cardsContainer);
 // });
 editProfileButton.addEventListener("click", () => {
+  // nameInput.value = "";
+  // jobInput.value = "";
   clearValidation(formEditProfile, validationSt);
   openModal(formEditProfile);
   nameInput.value = profileTitle.textContent;
@@ -79,6 +81,8 @@ closeAddNewCard.addEventListener("click", function () {
   closeModal(formAddCard);
 });
 createNewCard.addEventListener("click", () => {
+  linkInput.value = "";
+  nameCardInput.value = "";
   formCard.reset();
   clearValidation(formAddCard, validationSt);
   openModal(formAddCard);
@@ -97,24 +101,30 @@ function handleProfileFormSubmit(evt) {
   // Так мы можем определить свою логику отправки.
   // О том, как это делать, расскажем позже.
   // Получите значение полей jobInput и nameInput из свойства value
-  let name = nameInput.value;
-  let job = jobInput.value;
+  const name = nameInput.value;
+  const job = jobInput.value;
   // Выберите элементы, куда должны быть вставлены значения полей
   // Вставьте новые значения с помощью textContent
-  profileTitle.textContent = name;
-  profileDesc.textContent = job;
-  newProfile(name, job);
+  newProfile(name, job)
+    .then((result) => {
+      profileTitle.textContent = result.name;
+      profileDesc.textContent = result.about;
+      // console.log(name);
+      // console.log();
+    })
+    .catch((err) => console.log(err));
   closeModal(formEditProfile);
 }
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
 formProfile.addEventListener("submit", handleProfileFormSubmit);
 // formCard.addEventListener("submit", handleCardFormSubmit);
+
 enableValidation(validationSt);
 let userId = "";
-let userAvatar = "";
 Promise.all([getInitialCards(), getUserMe()])
   .then(([initialCards, userData]) => {
+    let userAvatar = "";
     userAvatar = userData.avatar;
     userId = userData._id;
     profileTitle.textContent = userData.name;
@@ -139,7 +149,7 @@ function handleAddCard() {
     ".popup__input_type_card-name"
   );
   const cardUrlInput = newCardElement.querySelector(".popup__input_type_url");
-  function formNewCardSubmit(evt) {
+  function handleNewCardSubmit(evt) {
     renderLoading(evt.submitter, "Сохранение...");
     evt.preventDefault();
     const card = {
@@ -166,7 +176,7 @@ function handleAddCard() {
       })
       .finally(() => renderLoading(evt.submitter, "Сохранить"));
   }
-  newCardElement.addEventListener("submit", formNewCardSubmit);
+  newCardElement.addEventListener("submit", handleNewCardSubmit);
 }
 function handleEditAvatar() {
   const avatarInput = formAvatar.querySelector(".popup__input_type_url");
