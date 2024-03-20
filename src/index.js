@@ -1,12 +1,6 @@
 import "./pages/index.css";
-import {
-  openModal,
-  closeModal,
-  openImageModal,
-  handleAddCard,
-  handleEditAvatar,
-} from "./scripts/modals";
-import { initialCards } from "./scripts/cards";
+import { openModal, closeModal } from "./scripts/modals";
+// import { initialCards } from "./scripts/cards";
 import { createCard, likeCard, removeCard, handleLike } from "./scripts/card";
 import {
   getInitialCards,
@@ -24,9 +18,9 @@ import {
 // @todo: Темплейт карточки
 // @todo: DOM узлы
 export const cardsContainer = document.querySelector(".places__list");
-const popupTypeImage = document.querySelector(".popup_type_image");
+ const popupTypeImage = document.querySelector(".popup_type_image");
 const popupTypeImageClose = popupTypeImage.querySelector(".popup__close");
-const popupImage = popupTypeImage.querySelector(".popup__image");
+ const popupImage = popupTypeImage.querySelector(".popup__image");
 const popupCaption = popupTypeImage.querySelector(".popup__caption");
 const editProfileButton = document.querySelector(".profile__edit-button");
 const formEditProfile = document.querySelector(".popup_type_edit");
@@ -55,7 +49,7 @@ avatarButton.addEventListener("click", () => {
 });
 closeEditAvatar.addEventListener("click", function () {
   closeModal(formEditAvatar);
-})
+});
 handleEditAvatar();
 
 function openImage(imageSrc, descriptionText) {
@@ -117,7 +111,7 @@ function handleProfileFormSubmit(evt) {
 formProfile.addEventListener("submit", handleProfileFormSubmit);
 // formCard.addEventListener("submit", handleCardFormSubmit);
 enableValidation(validationSt);
-export let userId = "";
+let userId = "";
 let userAvatar = "";
 Promise.all([getInitialCards(), getUserMe()])
   .then(([initialCards, userData]) => {
@@ -127,11 +121,70 @@ Promise.all([getInitialCards(), getUserMe()])
     profileDesc.textContent = userData.about;
     avatarButton.style.backgroundImage = `url(${userData.avatar})`;
     initialCards.forEach((item) => {
-      const cardItem = createCard(item, openImage);
+      const cardItem = createCard(item, openImage, userId);
       cardsContainer.append(cardItem);
     });
   })
   .catch((err) => {
     console.log(err);
   });
+
+const popupNewCard = document.querySelector(".popup_type_new-card");
+function renderLoading(saveButton, status) {
+  saveButton.textContent = status;
+}
+function handleAddCard() {
+  const newCardElement = popupNewCard.querySelector(".popup__form");
+  const cardNameInput = newCardElement.querySelector(
+    ".popup__input_type_card-name"
+  );
+  const cardUrlInput = newCardElement.querySelector(".popup__input_type_url");
+  function formNewCardSubmit(evt) {
+    renderLoading(evt.submitter, "Сохранение...");
+    evt.preventDefault();
+    const card = {
+      name: cardNameInput.value,
+      link: cardUrlInput.value,
+    };
+    newCard(card)
+      .then((card) => {
+        const cardItem = createCard(
+          card,
+          // removeCard,
+          // handleLike,
+          openImage,
+          userId
+        );
+        cardsContainer.prepend(cardItem);
+
+        closeModal(popupNewCard);
+        cardNameInput.value = "";
+        cardUrlInput.value = "";
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => renderLoading(evt.submitter, "Сохранить"));
+  }
+  newCardElement.addEventListener("submit", formNewCardSubmit);
+}
+function handleEditAvatar() {
+  const avatarInput = formAvatar.querySelector(".popup__input_type_url");
+  let userAvatar = "";
+  function formSubmitAvatar(evt) {
+    renderLoading(evt.submitter, "Сохранение...");
+    evt.preventDefault();
+    updateAvatarId({ avatar: avatarInput.value })
+      .then((data) => {
+        avatarButton.style = `background-image: url(${data.avatar})`;
+        userAvatar = data.avatar;
+        closeModal(formEditAvatar);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => renderLoading(evt.submitter, "Сохранить"));
+  }
+  formAvatar.addEventListener("submit", formSubmitAvatar);
+}
 handleAddCard(createCard, removeCard, cardsContainer);

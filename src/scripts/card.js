@@ -1,7 +1,5 @@
 import { deleteCardsId, addLikeId } from "./api";
-import { userId } from "..";
-
-export function createCard(cardElement, openImage) {
+export function createCard(cardElement, openImage, userId) {
   const cardTemplete = document.querySelector("#card-template").content;
   const card = cardTemplete.querySelector(".card").cloneNode(true);
   const imageCont = card.querySelector(".card__image");
@@ -9,7 +7,7 @@ export function createCard(cardElement, openImage) {
   const deleteButton = card.querySelector(".card__delete-button");
   titleCont.textContent = cardElement.name;
   imageCont.src = cardElement.link;
-  titleCont.alt = cardElement.description;
+  titleCont.alt = cardElement.name;
   if (cardElement.owner._id !== userId) {
     deleteButton.classList.add("card__delete-button-hidden");
   }
@@ -17,7 +15,6 @@ export function createCard(cardElement, openImage) {
   imageCont.addEventListener("click", function () {
     openImage(imageCont.src, titleCont.textContent);
   });
-
   card.id = cardElement._id;
   // deleteCardsId(card.id);
   const countLikes = cardElement.likes.length || 0;
