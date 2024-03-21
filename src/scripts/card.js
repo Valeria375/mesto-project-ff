@@ -1,7 +1,5 @@
 import { deleteCardsId, addLikeId } from "./api";
-import { userId } from "..";
-
-export function createCard(cardElement, openImage) {
+export function createCard(cardElement, openImage, userId) {
   const cardTemplete = document.querySelector("#card-template").content;
   const card = cardTemplete.querySelector(".card").cloneNode(true);
   const imageCont = card.querySelector(".card__image");
@@ -9,16 +7,19 @@ export function createCard(cardElement, openImage) {
   const deleteButton = card.querySelector(".card__delete-button");
   titleCont.textContent = cardElement.name;
   imageCont.src = cardElement.link;
-  titleCont.alt = cardElement.description;
+  titleCont.alt = cardElement.name;
   if (cardElement.owner._id !== userId) {
     deleteButton.classList.add("card__delete-button-hidden");
   }
-  deleteButton.addEventListener("click", removeCard);
+  // deleteButton.addEventListener("click", removeCard);
+  deleteButton.addEventListener("click", () =>
+    removeCard(card, cardElement._id)
+  );
+
   imageCont.addEventListener("click", function () {
     openImage(imageCont.src, titleCont.textContent);
   });
-
-  card.id = cardElement._id;
+  // card.id = cardElement._id;
   // deleteCardsId(card.id);
   const countLikes = cardElement.likes.length || 0;
   const countLikesN = card.querySelector(".count__likes");
@@ -26,7 +27,7 @@ export function createCard(cardElement, openImage) {
 
   const likeButtonNode = card.querySelector(".card__like-button");
   likeButtonNode.addEventListener("click", () =>
-    handleLike(likeButtonNode, card)
+    handleLike(likeButtonNode, card, cardElement._id)
   );
 
   const isLiked = cardElement.likes.some((like) => like._id === userId);
@@ -39,33 +40,27 @@ export function createCard(cardElement, openImage) {
 // export function likeCard(button) {
 //   button.classList.toggle("card__like-button_is-active");
 // }
-function closeModalByEsc(evt) {
-  if (evt.key === "Escape") {
-    const openedPopup = document.querySelector(".popup_is-opened");
-    handleCloseModal(openedPopup);
-  }
-}
-export const handleCloseModal = (modalWindow) => {
-  modalWindow.classList.remove("popup_is-opened");
-  document.removeEventListener("keydown", closeModalByEsc);
-};
-export const handleOpenModal = (modalWindow) => {
-  modalWindow.classList.add("popup_is-opened");
-  document.addEventListener("keydown", closeModalByEsc);
-};
 
-export function removeCard(event) {
-  const deletedCard = event.target.closest(".card");
+// export function removeCard(event) {
+//   const deletedCard = event.target.closest(".card");
+//   // console.log(deletedCard.id);
+//   deleteCardsId(deletedCard.id)
+//     .then(deletedCard.remove())
+//     .catch((err) => console.error(`Ошибка удаления карточки: ${err}`));
+// }
+export function removeCard(card, id) {
+  const deletedCard = card; //event.target.closest(".card");
   // console.log(deletedCard.id);
-  deleteCardsId(deletedCard.id)
+  deleteCardsId(id)
     .then(deletedCard.remove())
     .catch((err) => console.error(`Ошибка удаления карточки: ${err}`));
 }
-export function handleLike(likeButton, cardElem) {
+
+export function handleLike(likeButton, cardElem, id) {
   const myLikeCard = likeButton.classList.contains(
     "card__like-button_is-active"
   );
-  const cardId = cardElem.id;
+  const cardId = id;
   const countLikesN = cardElem.querySelector(".count__likes");
   //countLikesN.textContent = countLikes;
   if (!myLikeCard) {
@@ -86,3 +81,4 @@ export function handleLike(likeButton, cardElem) {
       .catch((err) => console.error(`Ошибка: ${err}`));
   }
 }
+

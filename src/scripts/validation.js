@@ -1,11 +1,3 @@
-export const validationSt = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible",
-};
 export const enableValidation = (validationSt) => {
   const formList = Array.from(
     document.querySelectorAll(validationSt.formSelector)
@@ -26,7 +18,7 @@ export const clearValidation = (formElement, validationSt) => {
   );
   inputList.forEach((inputElement, validationSt) => {
     hideInputError(formElement, inputElement, validationSt);
-    inputElement.value = "";
+    // inputElement.value = "";
   });
   disabledButton(buttonElement, validationSt);
 };
@@ -81,7 +73,7 @@ const toggleButton = (inputList, buttonElement, validationSt) => {
     buttonElement.classList.remove(validationSt.inactiveButtonClass);
   }
 };
-const setListener = (formElement, validationSt) => {
+ const setListener = (formElement, validationSt) => {
   const inputList = Array.from(
     formElement.querySelectorAll(validationSt.inputSelector)
   );
