@@ -158,15 +158,8 @@ function handleAddCard() {
     };
     newCard(card)
       .then((card) => {
-        const cardItem = createCard(
-          card,
-          // removeCard,
-          // handleLike,
-          openImage,
-          userId
-        );
+        const cardItem = createCard(card, openImage, userId);
         cardsContainer.prepend(cardItem);
-
         closeModal(popupNewCard);
         cardNameInput.value = "";
         cardUrlInput.value = "";
@@ -181,7 +174,7 @@ function handleAddCard() {
 function handleEditAvatar() {
   const avatarInput = formAvatar.querySelector(".popup__input_type_url");
   let userAvatar = "";
-  function formSubmitAvatar(evt) {
+  function handleFormSubmitAvatar(evt) {
     renderLoading(evt.submitter, "Сохранение...");
     evt.preventDefault();
     updateAvatarId({ avatar: avatarInput.value })
@@ -193,8 +186,10 @@ function handleEditAvatar() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => renderLoading(evt.submitter, "Сохранить"));
+      .finally(() => {
+        renderLoading(evt.submitter, "Сохранить");
+      });
   }
-  formAvatar.addEventListener("submit", formSubmitAvatar);
+  formAvatar.addEventListener("submit", handleFormSubmitAvatar);
 }
 handleAddCard(createCard, removeCard, cardsContainer);
