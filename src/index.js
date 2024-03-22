@@ -1,7 +1,7 @@
 import "./pages/index.css";
-import { openModal, closeModal, openImage } from "./scripts/modals";
+import { openModal, closeModal } from "./scripts/modals";
 // import { initialCards } from "./scripts/cards";
-import { createCard, likeCard, removeCard, handleLike } from "./scripts/card";
+import { createCard, removeCard, handleLike } from "./scripts/card";
 import {
   getInitialCards,
   getUserMe,
@@ -21,11 +21,11 @@ const validationSt = {
 };
 // @todo: Темплейт карточки
 // @todo: DOM узлы
-export const cardsContainer = document.querySelector(".places__list");
-export const popupTypeImage = document.querySelector(".popup_type_image");
+const cardsContainer = document.querySelector(".places__list");
+const popupTypeImage = document.querySelector(".popup_type_image");
 const popupTypeImageClose = popupTypeImage.querySelector(".popup__close");
-export const popupImage = popupTypeImage.querySelector(".popup__image");
-export const popupCaption = popupTypeImage.querySelector(".popup__caption");
+const popupImage = popupTypeImage.querySelector(".popup__image");
+const popupCaption = popupTypeImage.querySelector(".popup__caption");
 const editProfileButton = document.querySelector(".profile__edit-button");
 const formEditProfile = document.querySelector(".popup_type_edit");
 const createNewCard = document.querySelector(".profile__add-button");
@@ -42,9 +42,9 @@ const profileDesc = document.querySelector(".profile__description");
 const closeEditProfileButton = formEditProfile.querySelector(".popup__close");
 const closeAddNewCard = formAddCard.querySelector(".popup__close");
 //аватар
-export const avatarButton = document.querySelector(".profile__image");
-export const formEditAvatar = document.querySelector(".popup_type-avatar");
-export const formAvatar = formEditAvatar.querySelector(".popup__form");
+const avatarButton = document.querySelector(".profile__image");
+const formEditAvatar = document.querySelector(".popup_type-avatar");
+const formAvatar = formEditAvatar.querySelector(".popup__form");
 const closeEditAvatar = formEditAvatar.querySelector(".popup__close");
 const linkAvatar = formEditAvatar.querySelector(".popup__input_type_url");
 avatarButton.addEventListener("click", () => {
@@ -57,15 +57,14 @@ closeEditAvatar.addEventListener("click", function () {
   closeModal(formEditAvatar);
 });
 handleEditAvatar();
+function openImage(imageSrc, descriptionText) {
+  popupImage.src = imageSrc;
+  popupImage.alt = descriptionText;
+  popupCaption.textContent = descriptionText;
+  openModal(popupTypeImage);
+}
 
 popupTypeImageClose.addEventListener("click", () => closeModal(popupTypeImage));
-// function placeCard(card, container) {
-//   // const cardItem = createCard(card, likeCard, openImage);
-//   //  container.append(cardItem);
-// }
-// initialCards.forEach((card) => {
-//   placeCard(card, cardsContainer);
-// });
 editProfileButton.addEventListener("click", () => {
   // nameInput.value = "";
   // jobInput.value = "";
@@ -81,8 +80,8 @@ closeAddNewCard.addEventListener("click", function () {
   closeModal(formAddCard);
 });
 createNewCard.addEventListener("click", () => {
-  linkInput.value = "";
-  nameCardInput.value = "";
+  // linkInput.value = "";
+  // nameCardInput.value = "";
   formCard.reset();
   clearValidation(formAddCard, validationSt);
   openModal(formAddCard);
@@ -97,6 +96,7 @@ popupTypeImageClose.addEventListener("click", function () {
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
 function handleProfileFormSubmit(evt) {
+  renderLoading(evt.submitter, "Сохранение...");
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.
   // Так мы можем определить свою логику отправки.
   // О том, как это делать, расскажем позже.
@@ -109,11 +109,9 @@ function handleProfileFormSubmit(evt) {
     .then((result) => {
       profileTitle.textContent = result.name;
       profileDesc.textContent = result.about;
-      // console.log(name);
-      // console.log();
+      closeModal(formEditProfile);
     })
     .catch((err) => console.log(err));
-  closeModal(formEditProfile);
 }
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
@@ -124,8 +122,8 @@ enableValidation(validationSt);
 let userId = "";
 Promise.all([getInitialCards(), getUserMe()])
   .then(([initialCards, userData]) => {
-    let userAvatar = "";
-    userAvatar = userData.avatar;
+    const userAvatar = userData.avatar;
+    // userAvatar = userData.avatar;
     userId = userData._id;
     profileTitle.textContent = userData.name;
     profileDesc.textContent = userData.about;
@@ -161,8 +159,8 @@ function handleAddCard() {
         const cardItem = createCard(card, openImage, userId);
         cardsContainer.prepend(cardItem);
         closeModal(popupNewCard);
-        cardNameInput.value = "";
-        cardUrlInput.value = "";
+        // cardNameInput.value = "";
+        // cardUrlInput.value = "";
       })
       .catch((err) => {
         console.log(err);
@@ -173,7 +171,6 @@ function handleAddCard() {
 }
 function handleEditAvatar() {
   const avatarInput = formAvatar.querySelector(".popup__input_type_url");
-  let userAvatar = "";
   function handleFormSubmitAvatar(evt) {
     renderLoading(evt.submitter, "Сохранение...");
     evt.preventDefault();

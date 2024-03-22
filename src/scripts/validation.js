@@ -3,9 +3,9 @@ export const enableValidation = (validationSt) => {
     document.querySelectorAll(validationSt.formSelector)
   );
   formList.forEach((formElement) => {
-    formElement.addEventListener("submit", function (evt) {
-      evt.preventDefault();
-    });
+    // formElement.addEventListener("submit", function (evt) {
+    //   evt.preventDefault();
+    // });
     setListener(formElement, validationSt);
   });
 };
